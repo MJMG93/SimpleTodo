@@ -10,9 +10,11 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
+
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 
@@ -62,23 +64,26 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         });
+    }
 
         private File getDataFile() {
             return new File(getFilesDir(), "todo.txt");
         }
 
         private void readItems() {
-            items = new ArrayList<>(FileUtils.readLines(getDataFile(), Charset.defaultCharset()));
-        }
-        catch (IOException e) {
-            Log.e("MainActivity", "Error reading file", e);
-            items = new ArrayList<>();
+            try {
+                items = new ArrayList<>(FileUtils.readLines(getDataFile(), Charset.defaultCharset()));
+            } catch (IOException e) {
+                Log.e("MainActivity", "Error reading file", e);
+                items = new ArrayList<>();
+            }
         }
 
-        private void writeItems() {
-            FileUtils.writeLines(getDataFile(), items);
+            private void writeItems() {
+                try {
+                    FileUtils.writeLines(getDataFile(), items);
+                } catch (IOException e) {
+                    Log.e("MainActivity", "Error writing file", e);
+                }
+            }
         }
-        catch (IOException e) {
-            Log.e("MainActivity", "Error writing file", e);
-    }
-}
